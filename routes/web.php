@@ -32,6 +32,10 @@ Route::middleware('auth')->group(function () {
     // Riwayat (Semua bisa akses, tapi Pasien cuma lihat punya sendiri)
     Route::resource('visits', VisitController::class)->only(['index', 'show', 'destroy']);
 
+    // Route Detail Penyakit (Public Read-Only)
+    Route::get('/diagnosis/disease/{disease}', [DiagnosisController::class, 'showDisease'])
+        ->name('diagnosis.disease.show');
+
 
     // === KHUSUS ADMIN (Diproteksi Middleware 'admin') ===
     Route::middleware('admin')->group(function () {

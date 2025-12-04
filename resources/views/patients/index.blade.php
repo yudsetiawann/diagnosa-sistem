@@ -16,7 +16,7 @@
       <!-- Flash Message Modern -->
       @if (session('success'))
         <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 4000)"
-          class="mb-6 flex items-center p-4 mb-4 text-green-800 rounded-xl bg-green-50 border border-green-200"
+          class="mb-6 flex items-center p-4 text-green-800 rounded-xl bg-green-50 border border-green-200"
           role="alert">
           <svg class="flex-shrink-0 w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd"

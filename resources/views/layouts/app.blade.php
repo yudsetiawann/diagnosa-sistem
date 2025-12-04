@@ -50,8 +50,7 @@
         <!-- Kiri: Copyright -->
         <div class="text-center md:text-left mb-4 md:mb-0">
           <p class="text-sm text-gray-500">
-            &copy; {{ date('Y') }} <span class="font-bold text-gray-700">{{ config('app.name') }}</span>. All rights
-            reserved.
+            &copy; {{ date('Y') }} <span class="font-bold text-gray-700">{{ config('app.name') }}</span>. Kelompok 7.
           </p>
         </div>
 

@@ -59,54 +59,53 @@
         @else
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($results as $disease)
-              <div
-                class="group bg-white rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col h-full">
-                <div class="p-6 flex-1">
-                  <div class="flex items-start justify-between mb-4">
-                    <div
-                      class="p-3 bg-indigo-50 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <!-- Tambahkan tag <a> pembungkus yang mengarah ke route show -->
+              <a href="{{ route('diagnosis.disease.show', $disease) }}" class="block group">
+                <div
+                  class="bg-gray-50rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:bg-white h-full border border-transparent hover:border-indigo-200">
+                  <div class="p-6">
+                    <div class="flex justify-between items-start">
+                      <h4
+                        class="text-xl font-bold text-indigo-600 group-hover:text-indigo-700 transition-colors">
+                        {{ $disease->name }}
+                      </h4>
+                      <!-- Ikon panah kecil -->
+                      <svg class="w-5 h-5 text-gray-300 group-hover:text-indigo-500 transition-colors" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
-                        </path>
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                       </svg>
                     </div>
-                  </div>
 
-                  <h4 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                    {{ $disease->name }}
-                  </h4>
-                  <p class="text-sm text-gray-500 line-clamp-3 mb-6">
-                    {{ $disease->description }}
-                  </p>
+                    <p class="mt-2 text-sm text-gray-600 line-clamp-3">
+                      {{ $disease->description }}
+                    </p>
 
-                  <div class="pt-4 border-t border-gray-100">
-                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Gejala Terkait</p>
+                    <hr class="my-4">
+
+                    <h5 class="font-semibold mb-2 text-xs text-gray-500 uppercase tracking-wide">Gejala Terkait:</h5>
                     <div class="flex flex-wrap gap-2">
-                      @foreach ($disease->symptoms as $symptom)
-                        @php
-                          // Highlight jika gejala ini mengandung kata kunci pencarian
-                          $isMatch = stripos($symptom->name, $searchTerm) !== false;
-                        @endphp
-                        <span
-                          class="{{ $isMatch ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : 'bg-gray-100 text-gray-600' }} inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium">
+                      @foreach ($disease->symptoms->take(3) as $symptom)
+                        <span @class([
+                            'inline-block rounded-full px-2 py-1 text-xs font-semibold',
+                            'bg-indigo-100 text-indigo-800' =>
+                                stripos($symptom->name, $searchTerm) !== false,
+                            'bg-gray-200 text-gray-600' =>
+                                stripos($symptom->name, $searchTerm) === false,
+                        ])>
                           {{ $symptom->name }}
                         </span>
                       @endforeach
+                      @if ($disease->symptoms->count() > 3)
+                        <span
+                          class="inline-block rounded-full px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-500">
+                          +{{ $disease->symptoms->count() - 3 }} lagi
+                        </span>
+                      @endif
                     </div>
                   </div>
                 </div>
-                <div class="bg-gray-50 px-6 py-3 border-t border-gray-100">
-                  <a href="{{ route('diseases.index') }}?search={{ $disease->name }}"
-                    class="text-sm font-medium text-indigo-600 hover:text-indigo-500 flex items-center">
-                    Lihat Detail Lengkap
-                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                    </svg>
-                  </a>
-                </div>
-              </div>
+              </a>
             @endforeach
           </div>
         @endif

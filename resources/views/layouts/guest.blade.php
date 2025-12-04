@@ -36,7 +36,7 @@
         <!-- FOOTER GUEST (Di bawah tombol login/register) -->
         <div class="mt-10 pt-6 border-t border-gray-100 text-center">
           <p class="text-xs text-gray-400">
-            &copy; {{ date('Y') }} {{ config('app.name') }}.
+            &copy; {{ date('Y') }} Kelompok 7.
             <br class="sm:hidden">
             Klinik Kesehatan Modern.
           </p>
