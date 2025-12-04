@@ -103,4 +103,15 @@ class DiagnosisController extends Controller
 
         return redirect()->route('diagnosis.quick-view')->with('success', 'Rekam medis berhasil disimpan!');
     }
+
+    /**
+     * BARU: Menampilkan detail penyakit untuk umum (Pasien/Admin)
+     */
+    public function showDisease(Disease $disease)
+    {
+        // Load relasi symptoms agar bisa ditampilkan
+        $disease->load('symptoms');
+
+        return view('diagnosis.show', compact('disease'));
+    }
 }
