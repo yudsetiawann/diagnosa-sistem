@@ -25,6 +25,11 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            // Tambahan Validasi Data Pasien
+            'age' => ['nullable', 'integer', 'min:0', 'max:150'],
+            'gender' => ['nullable', 'in:Male,Female,Other'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'address' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

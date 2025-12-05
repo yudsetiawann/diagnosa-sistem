@@ -34,6 +34,18 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        // 2. Update Data Pasien (Age, Gender, dll)
+        // Kita gunakan updateOrCreate untuk keamanan (jika user lama blm punya data patient)
+        $request->user()->patient()->updateOrCreate(
+            ['user_id' => $request->user()->id],
+            [
+                'age' => $request->age ?? 0,
+                'gender' => $request->gender ?? 'Other',
+                'phone' => $request->phone,
+                'address' => $request->address,
+            ]
+        );
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
