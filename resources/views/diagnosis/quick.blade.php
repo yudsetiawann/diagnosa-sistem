@@ -51,10 +51,11 @@
                       <select name="patient_id_display"
                         class="block w-full rounded-xl border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 py-2.5 pl-3 pr-10 text-sm">
                         <option value="">-- Mode Tamu (Tanpa Simpan) --</option>
-                        @foreach ($patients as $p)
+                        <!-- Mengambil seluruh data user karena semua user dianggap pasien, DIURUTKAN A-Z -->
+                        @foreach (\App\Models\User::where('role', '!=', 'admin')->orderBy('name', 'asc')->get() as $p)
                           <option value="{{ $p->id }}"
                             {{ request('patient_id_display') == $p->id ? 'selected' : '' }}>
-                            {{ $p->name }} ({{ $p->patient->age ?? '-' }} Thn)
+                            {{ $p->name }} ({{ optional($p->patient)->age ?? '-' }} Thn)
                           </option>
                         @endforeach
                       </select>
@@ -189,34 +190,38 @@
 
                         <!-- Action Form -->
                         <div class="md:w-48 flex-shrink-0 flex flex-col justify-end h-full">
-                          <form action="{{ route('diagnosis.save') }}" method="POST" class="mt-4 md:mt-0">
-                            @csrf
-                            <input type="hidden" name="disease_id" value="{{ $disease->id }}">
 
-                            @php
-                              $symptomNames = \App\Models\Symptom::whereIn('id', $selectedSymptoms)
-                                  ->pluck('name')
-                                  ->implode(', ');
-                            @endphp
-                            <input type="hidden" name="symptoms_list" value="{{ $symptomNames }}">
-
-                            <!-- Input Hidden untuk User ID (diisi via JS) -->
-                            <input type="hidden" name="user_id" id="user_id_input_{{ $disease->id }}">
-
-                            <button type="button" onclick="submitDiagnosis({{ $disease->id }})"
-                              class="w-full inline-flex justify-center items-center px-4 py-2.5 bg-emerald-600 border border-transparent rounded-xl font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-lg shadow-emerald-500/20">
-                              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
-                                </path>
-                              </svg>
-                              Simpan Rekam Medis
-                            </button>
-                          </form>
-
+                          <!-- PERUBAHAN DI SINI: Form hanya muncul jika role admin -->
                           @if (Auth::user()->role === 'admin')
+                            <form action="{{ route('diagnosis.save') }}" method="POST" class="mt-4 md:mt-0">
+                              @csrf
+                              <input type="hidden" name="disease_id" value="{{ $disease->id }}">
+
+                              @php
+                                $symptomNames = \App\Models\Symptom::whereIn('id', $selectedSymptoms)
+                                    ->pluck('name')
+                                    ->implode(', ');
+                              @endphp
+                              <input type="hidden" name="symptoms_list" value="{{ $symptomNames }}">
+
+                              <!-- Input Hidden untuk User ID (diisi via JS) -->
+                              <input type="hidden" name="user_id" id="user_id_input_{{ $disease->id }}">
+
+                              <button type="button" onclick="submitDiagnosis({{ $disease->id }})"
+                                class="w-full inline-flex justify-center items-center px-4 py-2.5 bg-emerald-600 border border-transparent rounded-xl font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-lg shadow-emerald-500/20">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
+                                  </path>
+                                </svg>
+                                Simpan Rekam Medis
+                              </button>
+                            </form>
+
                             <p class="text-[10px] text-gray-400 text-center mt-2">Pastikan Pasien dipilih.</p>
                           @endif
+                          <!-- AKHIR PERUBAHAN -->
+
                         </div>
                       </div>
                     </div>
